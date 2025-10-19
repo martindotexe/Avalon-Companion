@@ -8,17 +8,17 @@ export type Character = {
 
 function createCharacterStore() {
 	let characters: Character[] = $state([
+		{ name: "Merlin", description: "Knows Evil. Must remain hidden.", alignment: "good", picked: true },
 		{ name: "Assassin", description: "May activate Assassination stage if three Quests succeed.", alignment: "evil", picked: true },
-		{ name: "Brute", description: "May Fail only the first three Quests.", alignment: "evil", picked: false },
-		{ name: "Cleric", description: "Secretly investigates the first Leader.", alignment: "good", picked: false },
+		{ name: "Percival", description: "Knows Merlin.", alignment: "good", picked: false, enabledBy: "Merlin" },
+		{ name: "Mordred", description: "Unknown to Merlin.", alignment: "evil", picked: false, enabledBy: "Merlin" },
+		{ name: "Oberon", description: "Unknown to Evil. Does not know Evil.", alignment: "evil", picked: false },
+		{ name: "Morgana", description: "Appears as Merlin.", alignment: "evil", picked: false, enabledBy: "Percival" },
 		{ name: "Lancelot", description: "Can switch allegiance. One added to each team.", alignment: "other", picked: false },
 		{ name: "Lunatic", description: "Must Fail every Quest.", alignment: "evil", picked: false },
-		{ name: "Merlin", description: "Knows Evil. Must remain hidden.", alignment: "good", picked: true },
-		{ name: "Mordred", description: "Unknown to Merlin.", alignment: "evil", picked: false, enabledBy: "Merlin" },
-		{ name: "Morgana", description: "Appears as Merlin.", alignment: "evil", picked: false, enabledBy: "Percival" },
-		{ name: "Oberon", description: "Unknown to Evil. Does not know Evil.", alignment: "evil", picked: false },
-		{ name: "Percival", description: "Knows Merlin.", alignment: "good", picked: false, enabledBy: "Merlin" },
+		{ name: "Brute", description: "May Fail only the first three Quests.", alignment: "evil", picked: false },
 		{ name: "Revealer", description: "Reveals loyalty after second failed Quest.", alignment: "evil", picked: false },
+		{ name: "Cleric", description: "Secretly investigates the first Leader.", alignment: "good", picked: false },
 		{ name: "Trickster", description: "May lie about loyalty.", alignment: "evil", picked: false },
 		{ name: "Troublemaker", description: "Must lie about loyalty.", alignment: "good", picked: false }
 	])

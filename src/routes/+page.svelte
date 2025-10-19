@@ -1,9 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { characterStore, playerCounts } from '$lib/characters.svelte';
-	import PlayerCountSlider from '$lib/components/avalon/PlayerCountSlider.svelte';
-	import CharacterList from '$lib/components/avalon/CharacterList.svelte';
-	import TeamDisplay from '$lib/components/avalon/TeamDisplay.svelte';
+	import CharacterPicker from '$lib/components/avalon/CharacterPicker.svelte';
 
 	let playerCount = $state(7);
 
@@ -41,53 +39,44 @@
 		return [...pickedEvil, ...minions];
 	});
 
-	let goodCharacters = $derived(characterStore.characters.filter((c) => c.alignment === 'good'));
-	let evilCharacters = $derived(characterStore.characters.filter((c) => c.alignment === 'evil'));
-	let otherCharacters = $derived(characterStore.characters.filter((c) => c.alignment === 'other'));
+	let goodCharacters = $derived(
+		characterStore.characters.filter((c) => c.alignment === 'good' || c.alignment === 'other')
+	);
+	let evilCharacters = $derived(
+		characterStore.characters.filter((c) => c.alignment === 'evil' || c.alignment === 'other')
+	);
 </script>
 
-<h1>Welcome to Avalon</h1>
-<div class="divider"></div>
+<div class="container mx-auto max-w-7xl px-4 py-8">
+	<h1 class="text-center">Welcome to Avalon</h1>
+	<div class="divider"></div>
 
-<p>{playerCount}</p>
-<PlayerCountSlider bind:playerCount />
+	<!-- Character Pickers - Stack on mobile, side by side on desktop -->
+	<div class="flex w-full flex-col gap-4 lg:flex-row">
+		<CharacterPicker
+			title="Good"
+			characters={goodCharacters}
+			onToggle={(name) => characterStore.toggleCharacter(name)}
+		/>
 
-<div class="divider"></div>
-<div class="flex w-full gap-4">
-	<CharacterList
-		title="Good Characters"
-		characters={goodCharacters}
-		onToggle={(name) => characterStore.toggleCharacter(name)}
-	/>
-	<div class="divider divider-horizontal"></div>
-	<CharacterList
-		title="Evil Characters"
-		characters={evilCharacters}
-		onToggle={(name) => characterStore.toggleCharacter(name)}
-	/>
-	<div class="divider divider-horizontal"></div>
-	<CharacterList
-		title="Other Characters"
-		characters={otherCharacters}
-		onToggle={(name) => characterStore.toggleCharacter(name)}
-	/>
-</div>
+		<div class="divider lg:divider-horizontal"></div>
 
-<!-- <div class="divider"></div> -->
+		<CharacterPicker
+			title="Evil"
+			characters={evilCharacters}
+			onToggle={(name) => characterStore.toggleCharacter(name)}
+		/>
+	</div>
 
-<!-- <div class="flex w-full"> -->
-<!-- 	<TeamDisplay title="Good" team={goodTeam()} count={goodTeam().length} /> -->
-<!-- 	<div class="divider divider-horizontal"></div> -->
-<!-- 	<TeamDisplay title="Evil" team={evilTeam()} count={evilTeam().length} /> -->
-<!-- </div> -->
+	<div class="divider"></div>
 
-<div class="divider"></div>
-
-<div class="w-full max-w-2xl">
-	<h2 class="mb-4 text-lg font-semibold">Game Script</h2>
-	<ol class="list-decimal space-y-2 pl-6">
-		{#each characterStore.script as line, index}
-			<li class="text-sm">{line}</li>
-		{/each}
-	</ol>
+	<!-- Game Script -->
+	<div class="w-full">
+		<h2 class="mb-4 text-lg font-semibold">Game Script</h2>
+		<ol class="list-decimal space-y-2 pl-6">
+			{#each characterStore.script as line}
+				<li class="text-sm">{line}</li>
+			{/each}
+		</ol>
+	</div>
 </div>
