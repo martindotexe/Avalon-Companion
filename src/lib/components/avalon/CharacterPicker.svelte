@@ -22,11 +22,7 @@
 		{#each characters as character}
 			<li class="list-row">
 				<div>
-					<img
-						class="size-10 rounded-box"
-						src="https://img.daisyui.com/images/profile/demo/1@94.webp"
-						alt={character.name}
-					/>
+					<svelte:component this={character.icon} />
 				</div>
 				<div class="list-col-grow">
 					<div class="font-semibold">{character.name}</div>

@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { characterStore, playerCounts } from '$lib/characters.svelte';
 	import CharacterPicker from '$lib/components/avalon/CharacterPicker.svelte';
+	import SettingsPicker from '$lib/components/avalon/SettingsPicker.svelte';
 
 	let playerCount = $state(7);
 
@@ -68,6 +69,12 @@
 		/>
 	</div>
 
+	<div class="divider"></div>
+	<SettingsPicker
+		title="Settings"
+		settings={characterStore.settings}
+		onToggle={(name) => characterStore.toggleSetting(name)}
+	/>
 	<div class="divider"></div>
 
 	<!-- Game Script -->
