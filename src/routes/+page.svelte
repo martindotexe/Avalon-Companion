@@ -48,42 +48,71 @@
 	);
 </script>
 
-<div class="container mx-auto max-w-7xl px-4 py-8">
-	<h1 class="text-center">Welcome to Avalon</h1>
-	<div class="divider"></div>
+<div class="min-h-screen bg-base-200">
+	<div class="container mx-auto max-w-7xl px-4 py-8">
+		<!-- Hero Section -->
+		<div class="hero mb-8 rounded-box bg-base-100 shadow-xl">
+			<div class="hero-content py-12 text-center">
+				<div class="max-w-md">
+					<h1
+						class="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-5xl font-bold text-transparent"
+					>
+						Avalon
+					</h1>
+					<p class="py-6 text-base-content/70">
+						Configure script by selecting characters and settings below
+					</p>
+				</div>
+			</div>
+		</div>
 
-	<!-- Character Pickers - Stack on mobile, side by side on desktop -->
-	<div class="flex w-full flex-col gap-4 lg:flex-row">
-		<CharacterPicker
-			title="Good"
-			characters={goodCharacters}
-			onToggle={(name) => characterStore.toggleCharacter(name)}
-		/>
+		<div class="mb-6 flex items-center gap-3">
+			<h2 class="text-2xl font-bold">Game setup</h2>
+		</div>
+		<!-- Character Selection Section -->
+		<div class="mb-8">
+			<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+				<CharacterPicker
+					title="Good"
+					characters={goodCharacters}
+					onToggle={(name) => characterStore.toggleCharacter(name)}
+				/>
 
-		<div class="divider lg:divider-horizontal"></div>
+				<CharacterPicker
+					title="Evil"
+					characters={evilCharacters}
+					onToggle={(name) => characterStore.toggleCharacter(name)}
+				/>
+			</div>
+		</div>
 
-		<CharacterPicker
-			title="Evil"
-			characters={evilCharacters}
-			onToggle={(name) => characterStore.toggleCharacter(name)}
-		/>
-	</div>
+		<!-- Settings Section -->
+		<div class="mb-8">
+			<SettingsPicker
+				title="Settings"
+				settings={characterStore.settings}
+				onToggle={(name) => characterStore.toggleSetting(name)}
+			/>
+		</div>
 
-	<div class="divider"></div>
-	<SettingsPicker
-		title="Settings"
-		settings={characterStore.settings}
-		onToggle={(name) => characterStore.toggleSetting(name)}
-	/>
-	<div class="divider"></div>
+		<!-- Game Script Section -->
+		<div class="mb-8">
+			<div class="mb-6 flex items-center gap-3">
+				<h2 class="text-2xl font-bold">Game Script</h2>
+			</div>
 
-	<!-- Game Script -->
-	<div class="w-full">
-		<h2 class="mb-4 text-lg font-semibold">Game Script</h2>
-		<ol class="list-decimal space-y-2 pl-6">
-			{#each characterStore.script as line}
-				<li class="text-sm">{line}</li>
-			{/each}
-		</ol>
+			<div class="card bg-base-100 shadow-xl">
+				<div class="card-body">
+					<ol class="space-y-3">
+						{#each characterStore.script as line, i}
+							<li class="flex gap-3">
+								<span class="mt-0.5 badge badge-ghost badge-sm">{i + 1}</span>
+								<span class="flex-1">{line}</span>
+							</li>
+						{/each}
+					</ol>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
