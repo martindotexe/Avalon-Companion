@@ -64,7 +64,7 @@ function createGameStore() {
 			warnFunc: () => {
 				const merlin = characters.find(c => c.id === "merlin")
 				const self = characters.find(c => c.id === "assassin")
-				if (!merlin?.picked && self?.picked) return "Assassin requires Merlin"
+				if (!merlin?.picked && self?.picked) return "Requires Merlin"
 				return null;
 			}
 		},
@@ -79,7 +79,7 @@ function createGameStore() {
 			warnFunc: () => {
 				const merlin = characters.find(c => c.id === "merlin")
 				const self = characters.find(c => c.id === "percival")
-				if (!merlin?.picked && self?.picked) return "Percival requires Merlin"
+				if (!merlin?.picked && self?.picked) return "Requires Merlin"
 				return null;
 			}
 		},
@@ -94,7 +94,7 @@ function createGameStore() {
 			warnFunc: () => {
 				const merlin = characters.find(c => c.id === "merlin")
 				const self = characters.find(c => c.id === "mordred")
-				if (!merlin?.picked && self?.picked) return "Mordred requires Merlin"
+				if (!merlin?.picked && self?.picked) return "Requires Merlin"
 				return null;
 			}
 		},
@@ -118,8 +118,9 @@ function createGameStore() {
 			pickFunc: () => toggleCharacter("morgana"),
 			warnFunc: () => {
 				const merlin = characters.find(c => c.id === "merlin")
+				const percival = characters.find(c => c.id === "percival")
 				const self = characters.find(c => c.id === "morgana")
-				if (!merlin?.picked && self?.picked) return "Morgana requires Merlin"
+				if (!(merlin?.picked && percival?.picked) && self?.picked) return "Requires Merlin & Percival"
 				return null;
 			}
 		},
@@ -146,7 +147,7 @@ function createGameStore() {
 		{
 			id: "lunatic",
 			name: "Lunatic",
-			description: "Must Fail evry Quest.",
+			description: "Must Fail every Quest.",
 			alignment: "evil",
 			icon: Shell,
 			picked: false,
@@ -231,7 +232,13 @@ function createGameStore() {
 			icon: HandPlatter,
 			picked: false,
 			pickFunc: () => toggleCharacter("untrustworthyServant"),
-			warnFunc: () => { return null }
+			warnFunc: () => {
+				const merlin = characters.find(c => c.id === "merlin")
+				const assassin = characters.find(c => c.id === "assassin")
+				const self = characters.find(c => c.id === "untrustworthyServant")
+				if (!(merlin?.picked && assassin?.picked) && self?.picked) return "Requires Merlin & Assassin"
+				return null;
+			}
 		},
 		{
 			id: "goodRouge",

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Character } from '$lib/game.svelte';
-	import { TriangleAlert } from '@lucide/svelte';
+	import Warning from '$lib/components/avalon/Warning.svelte';
 
 	let {
 		title,
@@ -46,10 +46,7 @@
 							<div class="mb-1 flex items-center gap-2">
 								<div class="text-base font-semibold">{character.name}</div>
 								{#if warning}
-									<div class="badge gap-1.5 badge-warning">
-										<TriangleAlert class="h-3.5 w-3.5" />
-										{warning}
-									</div>
+									<Warning {warning} />
 								{/if}
 							</div>
 							<div class="line-clamp-2 text-sm opacity-60">{character.description}</div>
