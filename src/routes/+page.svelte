@@ -4,92 +4,101 @@
 	import CharacterPicker from '$lib/components/avalon/CharacterPicker.svelte';
 	import ModulePicker from '$lib/components/avalon/ModulePicker.svelte';
 
-	let goodTeam = $derived(() => {
-		const counts = gameStore.getRecommendedTeamSizes();
-		const pickedGood = gameStore.selectedRoles.filter((c) => c.alignment === 'good');
-		const loyalServantsNeeded = counts.good - pickedGood.length;
-
-		const loyalServants = Array.from({ length: Math.max(0, loyalServantsNeeded) }, () => ({
-			name: 'Loyal Servant',
-			description: 'A loyal servant of Arthur.',
-			alignment: 'good' as const,
-			picked: false
-		}));
-
-		return [...pickedGood, ...loyalServants];
-	});
-
-	let evilTeam = $derived(() => {
-		const counts = gameStore.getRecommendedTeamSizes();
-		const pickedEvil = gameStore.selectedRoles.filter((c) => c.alignment === 'evil');
-		const minionsNeeded = counts.evil - pickedEvil.length;
-
-		const minions = Array.from({ length: Math.max(0, minionsNeeded) }, () => ({
-			name: 'Minion',
-			description: 'A minion of Mordred.',
-			alignment: 'evil' as const,
-			picked: false
-		}));
-
-		return [...pickedEvil, ...minions];
-	});
-
 	let goodCharacters = $derived(gameStore.characters.filter((c) => c.alignment === 'good'));
 	let evilCharacters = $derived(gameStore.characters.filter((c) => c.alignment === 'evil'));
 </script>
 
 <div class="min-h-screen bg-base-200">
-	<div class="container mx-auto max-w-7xl px-4 py-8">
-		<!-- Hero Section -->
-		<div class="hero mb-8 rounded-box bg-base-100 shadow-xl">
-			<div class="hero-content py-12 text-center">
-				<div class="max-w-md">
-					<h1
-						class="bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-5xl font-bold text-transparent"
-					>
-						Avalon
-					</h1>
-					<p class="py-6 text-base-content/70">
-						Configure script by selecting characters and settings below
-					</p>
+	<div class="container mx-auto max-w-7xl px-4 py-12">
+		<!-- Header -->
+		<div class="mb-16">
+			<div class="mb-12 text-center">
+				<h1 class="mb-4 text-6xl font-bold tracking-tight">Avalon: Big Box</h1>
+				<p class="mx-auto max-w-2xl text-xl text-base-content/80">
+					Craft the perfect game of deception, deduction, and betrayal. Choose your roles, enable
+					epic expansions, and let the battle between good and evil begin.
+				</p>
+			</div>
+
+			<!-- Player Count Slider -->
+			<div class="mx-auto max-w-2xl">
+				<div class="card bg-base-100 shadow-xl">
+					<div class="card-body">
+						<h3 class="mb-6 text-center text-lg font-bold">Player Count</h3>
+						<div class="mx-auto mb-8 w-full max-w-xs">
+							<input
+								type="range"
+								min="5"
+								max="10"
+								bind:value={gameStore.playerCount}
+								class="range range-primary"
+								step="1"
+							/>
+							<div class="mt-2 flex justify-between px-2.5 text-xs">
+								<span>5</span>
+								<span>6</span>
+								<span>7</span>
+								<span>8</span>
+								<span>9</span>
+								<span>10</span>
+							</div>
+						</div>
+						<!-- Team Stats -->
+						<div class="stats w-full stats-horizontal">
+							<div class="stat place-items-center">
+								<div class="stat-title">Good Team</div>
+								<div class="stat-value text-success">
+									{gameStore.getRecommendedTeamSizes().good}
+								</div>
+							</div>
+							<div class="stat place-items-center">
+								<div class="stat-title">Evil Team</div>
+								<div class="stat-value text-error">{gameStore.getRecommendedTeamSizes().evil}</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="mb-6 flex items-center gap-3">
-			<h2 class="text-2xl font-bold">Game setup</h2>
-		</div>
-
 		<!-- Character Selection Section -->
-		<div class="mb-8">
+		<div class="mb-12">
+			<h2 class="mb-6 text-2xl font-bold">Characters</h2>
 			<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-				<CharacterPicker title="Good" characters={goodCharacters} />
-
-				<CharacterPicker title="Evil" characters={evilCharacters} />
+				<CharacterPicker title="Good" characters={goodCharacters} type="good" />
+				<CharacterPicker title="Evil" characters={evilCharacters} type="evil" />
 			</div>
 		</div>
 
 		<!-- Module Section -->
-		<div class="mb-8">
+		<div class="mb-12">
+			<h2 class="mb-6 text-2xl font-bold">Modules</h2>
 			<ModulePicker modules={gameStore.modules} />
 		</div>
 
 		<!-- Game Script Section -->
-		<div class="mb-8">
-			<div class="mb-6 flex items-center gap-3">
-				<h2 class="text-2xl font-bold">Game Script</h2>
-			</div>
-
+		<div class="mb-12">
+			<h2 class="mb-6 text-2xl font-bold">Game Script</h2>
 			<div class="card bg-base-100 shadow-xl">
 				<div class="card-body">
-					<ol class="space-y-3">
-						{#each gameStore.script as line, i}
-							<li class="flex gap-3">
-								<span class="mt-0.5 badge badge-ghost badge-sm">{i + 1}</span>
-								<span class="flex-1">{line}</span>
-							</li>
-						{/each}
-					</ol>
+					<div class="overflow-x-auto">
+						<table class="table">
+							<thead>
+								<tr>
+									<th class="w-16">#</th>
+									<th>Instruction</th>
+								</tr>
+							</thead>
+							<tbody>
+								{#each gameStore.script as line, i}
+									<tr>
+										<td class="font-mono text-base-content/60">{i + 1}</td>
+										<td>{line}</td>
+									</tr>
+								{/each}
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -4,13 +4,16 @@
 
 	let {
 		title,
-		characters
+		characters,
+		type
 	}: {
 		title: string;
 		characters: Character[];
+		type: 'good' | 'evil';
 	} = $props();
 
 	let checkedCount = $derived(characters.filter((c) => c.picked).length);
+	let borderClass = $derived(type === 'good' ? 'border-success' : 'border-error');
 </script>
 
 <div class="card bg-base-100 shadow-xl">
@@ -26,13 +29,16 @@
 		</div>
 
 		<!-- Character List -->
-		<ul class="menu w-full p-4">
+		<ul class="menu w-full space-y-2 p-4">
 			{#each characters as character}
 				{@const Icon = character.icon}
 				{@const warning = character.warnFunc()}
 				<li class="w-full">
-					<label
-						class="flex w-full cursor-pointer items-center gap-5 rounded-lg p-4 transition-colors hover:bg-base-200"
+					<button
+						class="flex w-full cursor-pointer items-center gap-5 rounded-lg p-4 transition-all {character.picked
+							? `border-2 ${borderClass}`
+							: 'border-2 border-transparent hover:bg-base-200'}"
+						onclick={character.pickFunc}
 					>
 						<Icon class="h-8 w-8" />
 
@@ -40,22 +46,15 @@
 							<div class="mb-1 flex items-center gap-2">
 								<div class="text-base font-semibold">{character.name}</div>
 								{#if warning}
-									<div class="flex items-center gap-1.5 text-warning">
-										<TriangleAlert class="mt-0.5 h-3.5 w-3.5" />
+									<div class="badge gap-1.5 badge-warning">
+										<TriangleAlert class="h-3.5 w-3.5" />
 										{warning}
 									</div>
 								{/if}
 							</div>
 							<div class="line-clamp-2 text-sm opacity-60">{character.description}</div>
 						</div>
-
-						<input
-							type="checkbox"
-							class="checkbox flex-shrink-0 checkbox-lg"
-							checked={character.picked}
-							onchange={character.pickFunc}
-						/>
-					</label>
+					</button>
 				</li>
 			{/each}
 		</ul>

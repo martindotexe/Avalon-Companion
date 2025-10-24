@@ -35,8 +35,8 @@
 							<div class="mb-1 flex items-center gap-2">
 								<div class="text-base font-semibold">{module.name}</div>
 								{#if warning}
-									<div class="flex items-center gap-1.5 text-warning">
-										<TriangleAlert class="mt-0.5 h-3.5 w-3.5" />
+									<div class="badge gap-1.5 badge-warning">
+										<TriangleAlert class="h-3.5 w-3.5" />
 										{warning}
 									</div>
 								{/if}
