@@ -1,16 +1,12 @@
 <script lang="ts">
 	import '../app.css';
-	import { characterStore, playerCounts } from '$lib/characters.svelte';
+	import { gameStore } from '$lib/game.svelte';
 	import CharacterPicker from '$lib/components/avalon/CharacterPicker.svelte';
-	import SettingsPicker from '$lib/components/avalon/SettingsPicker.svelte';
-
-	let playerCount = $state(7);
+	import ModulePicker from '$lib/components/avalon/ModulePicker.svelte';
 
 	let goodTeam = $derived(() => {
-		const counts = playerCounts.get(playerCount);
-		if (!counts) return [];
-
-		const pickedGood = characterStore.characters.filter((c) => c.alignment === 'good' && c.picked);
+		const counts = gameStore.getRecommendedTeamSizes();
+		const pickedGood = gameStore.selectedRoles.filter((c) => c.alignment === 'good');
 		const loyalServantsNeeded = counts.good - pickedGood.length;
 
 		const loyalServants = Array.from({ length: Math.max(0, loyalServantsNeeded) }, () => ({
@@ -24,10 +20,8 @@
 	});
 
 	let evilTeam = $derived(() => {
-		const counts = playerCounts.get(playerCount);
-		if (!counts) return [];
-
-		const pickedEvil = characterStore.characters.filter((c) => c.alignment === 'evil' && c.picked);
+		const counts = gameStore.getRecommendedTeamSizes();
+		const pickedEvil = gameStore.selectedRoles.filter((c) => c.alignment === 'evil');
 		const minionsNeeded = counts.evil - pickedEvil.length;
 
 		const minions = Array.from({ length: Math.max(0, minionsNeeded) }, () => ({
@@ -40,12 +34,8 @@
 		return [...pickedEvil, ...minions];
 	});
 
-	let goodCharacters = $derived(
-		characterStore.characters.filter((c) => c.alignment === 'good' || c.alignment === 'other')
-	);
-	let evilCharacters = $derived(
-		characterStore.characters.filter((c) => c.alignment === 'evil' || c.alignment === 'other')
-	);
+	let goodCharacters = $derived(gameStore.characters.filter((c) => c.alignment === 'good'));
+	let evilCharacters = $derived(gameStore.characters.filter((c) => c.alignment === 'evil'));
 </script>
 
 <div class="min-h-screen bg-base-200">
@@ -69,30 +59,19 @@
 		<div class="mb-6 flex items-center gap-3">
 			<h2 class="text-2xl font-bold">Game setup</h2>
 		</div>
+
 		<!-- Character Selection Section -->
 		<div class="mb-8">
 			<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-				<CharacterPicker
-					title="Good"
-					characters={goodCharacters}
-					onToggle={(name) => characterStore.toggleCharacter(name)}
-				/>
+				<CharacterPicker title="Good" characters={goodCharacters} />
 
-				<CharacterPicker
-					title="Evil"
-					characters={evilCharacters}
-					onToggle={(name) => characterStore.toggleCharacter(name)}
-				/>
+				<CharacterPicker title="Evil" characters={evilCharacters} />
 			</div>
 		</div>
 
-		<!-- Settings Section -->
+		<!-- Module Section -->
 		<div class="mb-8">
-			<SettingsPicker
-				title="Settings"
-				settings={characterStore.settings}
-				onToggle={(name) => characterStore.toggleSetting(name)}
-			/>
+			<ModulePicker modules={gameStore.modules} />
 		</div>
 
 		<!-- Game Script Section -->
@@ -104,7 +83,7 @@
 			<div class="card bg-base-100 shadow-xl">
 				<div class="card-body">
 					<ol class="space-y-3">
-						{#each characterStore.script as line, i}
+						{#each gameStore.script as line, i}
 							<li class="flex gap-3">
 								<span class="mt-0.5 badge badge-ghost badge-sm">{i + 1}</span>
 								<span class="flex-1">{line}</span>
